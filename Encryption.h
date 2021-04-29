@@ -5,18 +5,14 @@
 typedef struct Encryption{
     uint32_t message;
     uint32_t encrypted;
-    uint32_t *subKeys;
+    uint32_t *keys;
 }Encrypt;
 
-void initEncryption(Encrypt*);
+uint32_t substitution(uint32_t state);
 
-uint32_t KeyXOR(uint32_t state, uint32_t subKey);
+uint32_t permutation(uint32_t state);
 
-uint32_t Substitution(uint32_t state);
+uint32_t* subKeyGeneration(uint32_t masterKey, uint32_t* keys);
 
-uint32_t Permutation(uint32_t state);
-
-uint32_t* SubKeyGeneration(uint32_t masterKey, uint32_t* subKeys);
-
-uint32_t Encryption(uint32_t message, uint32_t* keys);
+uint32_t encryption(uint32_t message, uint32_t* keys);
 
