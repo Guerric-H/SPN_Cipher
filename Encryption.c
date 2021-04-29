@@ -10,7 +10,7 @@ uint32_t Substitution(uint32_t state) {
     uint32_t res = 0, tmp = 0;
     for (uint32_t i = 0; i < 6; i++) {
         res = res << 4;
-        tmp = (state >> (5 - i) * 4) & 15 ;
+        tmp = (state >> (5 - i) * 4) & 0xf ;
         res |= sbox[tmp]; 
     }
     return res;
@@ -46,7 +46,7 @@ uint32_t* SubKeyGeneration(uint32_t masterKey, uint32_t* subKeys) {
         firstCopy = (tmp << 60) | (firstCopy << 4) >> 4;
         
         firstCopy  = (((firstCopy << 60) >> 60) ^ (i >> 1)) | (firstCopy >> 4) << 4;
-        secondCopy = ((secondCopy >> 15) ^ i) << 15 | (secondCopy << 1) >> 1;
+        secondCopy = (secondCopy ^ (i << 15) ) | (secondCopy & 0x7fff);
     }
     return subKeys;
 }
