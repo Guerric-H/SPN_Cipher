@@ -14,7 +14,7 @@ uint32_t KeyXOR(uint32_t state, uint32_t subKey);
 
 uint32_t Substitution(uint32_t state);
 
-uint32_t Permutation(uint32_t state, uint32_t* permutationTable);
+uint32_t Permutation(uint32_t state);
 
 uint32_t* SubKeyGeneration(uint32_t masterKey, uint32_t* subKeys);
 
