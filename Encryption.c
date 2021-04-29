@@ -7,7 +7,7 @@ uint32_t substitution(uint32_t state) {
     uint32_t res = 0, tmp = 0;
     for (uint32_t i = 0; i < 6; i++) {
         res = res << 4;
-        tmp = (state >> (5 - i) * 4) & 15 ;
+        tmp = (state >> (5 - i) * 4) & 0xf ;
         res |= sbox[tmp]; 
     }
     return res;
