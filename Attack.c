@@ -162,7 +162,6 @@ uint32_t attack(uint32_t m1, uint32_t m2, uint32_t c1, uint32_t c2){
     for(int i = 0; i <= 0xffffff; i++)
         dichotomous_search(candidate, enc_list, dec_list[i], 0, 0xffffff);
         
-    printf("Nombre de couple de clé candidates : %x\n",candidate->size);
     findCorrectKey(candidate, m2, c2);
 
  return 0 ;
@@ -183,5 +182,6 @@ uint32_t findCorrectKey(KeysList* candidates, uint32_t m2, uint32_t c2) {
             printf("(k1, k2) = (%x,%x)\n", current->k1, current->k2);
         current = tmp;
     }
+
     return 0;
 }

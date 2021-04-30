@@ -20,9 +20,9 @@ uint32_t* subKeyGeneration(uint32_t masterKey) {
         first_copy  = tmp;
         
         tmp = sbox[tmp >> 60];                    
-        first_copy = (tmp << 60) | (first_copy & 0xfffffffffffffff);
+        first_copy = (tmp << 60) | (first_copy << 4) >> 4;
 
-        first_copy  = ((first_copy & 0xf) ^ (i >> 1)) | (first_copy & 0xfffffffffffffff);
+        first_copy  = ((first_copy & 15) ^ (i >> 1)) | (first_copy >> 4) << 4;
         second_copy = (second_copy ^ (i << 15) ) | (second_copy & 0x7fff);
     }
     return sub_keys;

@@ -7,11 +7,15 @@
 
 int main (int argc, char **argv){
 
+    attack(0x5530a0, 0xbf2eef, 0x156a97, 0x73f787);
+    attack(0xae4def,0x832331,0xd218a6,0x9200d5);
+    return 0;
+}
     //attack(0x5530a0, 0xbf2eef, 0x156a97, 0x73f787);
     //attack(0xae4def,0x832331,0xd218a6,0x9200d5);
     
 
-    
+    /*
     KeysList* candidate = init();
 
     for(int i = 0 ; i < 10 ; i++)
@@ -19,7 +23,7 @@ int main (int argc, char **argv){
         insert(candidate,i,i);
     }
     
-    remove_element(candidate,(candidate->first));
+    //remove_element(candidate,(candidate->first->next->next));
     
     //printf("%d %d\n",candidate->first->k1, candidate->first->k2);
     insert(candidate,10,10);
@@ -33,7 +37,7 @@ int main (int argc, char **argv){
             current = current->next;
         }
     }
-    
+    */
 
     /*Encrypt enc;
     Decrypt dec;
@@ -49,7 +53,3 @@ int main (int argc, char **argv){
     printf("Chiffrement du message clair : %x\n\n", enc.encrypted);
     printf("Message chiffré choisi : %x\n", dec.encrypted);
     printf("Déchiffrement du message chiffré : %x\n", dec.message);*/
-
-return 0;
-}
-    
