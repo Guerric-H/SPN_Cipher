@@ -3,8 +3,6 @@
 #include <stdint.h>
 //Void in return, wether state is a pointer or not.
 
-
-
 typedef struct Decryption{
     uint32_t message;
     uint32_t encrypted;

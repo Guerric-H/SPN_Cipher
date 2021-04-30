@@ -1,6 +1,5 @@
 #include "Encryption.h"
 
-
 uint32_t substitution(uint32_t state) {
     uint16_t static sbox[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
 
@@ -59,3 +58,7 @@ uint32_t encryption(uint32_t message, uint32_t* keys) {
     message = message ^ keys[10];
     return message;
 }
+
+/* uint32_t encryptionBis(uint32_t message, uint32_t masterKey) {
+    message = encryption(message, subKeyGeneration(masterKey));
+} */
