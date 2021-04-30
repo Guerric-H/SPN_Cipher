@@ -1,41 +1,55 @@
 #include <stdlib.h>
+#include <pthread.h>
 #include "Encryption.h"
 #include "Decryption.h"
 #include "Attack.h"
 
+
 int main (int argc, char **argv){
 
-    Encrypt enc;
+    //attack(0x5530a0, 0xbf2eef, 0x156a97, 0x73f787);
+    //attack(0xae4def,0x832331,0xd218a6,0x9200d5);
+    
+
+    
+    KeysList* candidate = init();
+
+    for(int i = 0 ; i < 10 ; i++)
+    {
+        insert(candidate,i,i);
+    }
+    
+    remove_element(candidate,(candidate->first));
+    
+    //printf("%d %d\n",candidate->first->k1, candidate->first->k2);
+    insert(candidate,10,10);
+    CandidateKeys* current = candidate->first;
+    //remove_element(candidate,current);
+    for(int i = 0 ; i < 10 ; i++)
+    {
+        if(current){
+            printf("%d   %d\n",current->k1,current->k2);
+            
+            current = current->next;
+        }
+    }
+    
+
+    /*Encrypt enc;
     Decrypt dec;
     enc.message = 0xf955b9;
-    
+
     enc.keys = malloc(sizeof(uint32_t) * 11);
     dec.keys = enc.keys = subKeyGeneration(0xd1bd2d, enc.keys);
-    
+
     enc.encrypted = dec.encrypted = encryption(enc.message, enc.keys);
     dec.message = decryption(dec.encrypted, dec.keys);
 
     printf("Message clair choisi : %x\n", enc.message);
     printf("Chiffrement du message clair : %x\n\n", enc.encrypted);
     printf("Message chiffré choisi : %x\n", dec.encrypted);
-    printf("Déchiffrement du message chiffré : %x\n", dec.message);
+    printf("Déchiffrement du message chiffré : %x\n", dec.message);*/
 
-    List* list = malloc(sizeof(List)*20);
-    for (int i=0; i<20; i++) {
-        list[i].message = 0x444444 - (((i*3) + 7)%13);
-        list[i].key = 0x0;
-        printf ("i = %d -> %x\n", i, list[i].message);
-    }
-    printf("\n");
-    list = quickSort(list, 0, 19);
-    for (int i=0; i<20; i++)
-        printf ("i = %d -> %x\n", i, list[i].message);
-
-    return 0;
-
-    /* uint32_t m1 = 0x5530a0;
-    uint32_t c1 = 0x156a97;
-    
-     int count = attack(m1,0,c1,0);
-    printf("%d\n",count); */
+return 0;
 }
+    

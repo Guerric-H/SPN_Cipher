@@ -1,4 +1,6 @@
 #include "Decryption.h"
+#include "KeyGeneration.h"
+
 
 uint32_t revSubstitution(uint32_t state){
     uint32_t static rev_sbox[16] = {5, 14, 15, 8, 12, 1, 2, 13,
@@ -23,13 +25,17 @@ uint32_t revPermutation(uint32_t state) {
     return res;
 }
 
-uint32_t decryption (uint32_t encrypted, uint32_t* keys){
+uint32_t decryption (uint32_t encrypted, uint32_t key){
     
-    encrypted = encrypted ^ keys[10];
+    uint32_t* sub_keys = subKeyGeneration(key);
+
+    encrypted = encrypted ^ sub_keys[10];
     for (int i = 9; i >= 0 ; i--) {
         encrypted = revPermutation(encrypted);
         encrypted = revSubstitution(encrypted);
-        encrypted = encrypted ^ keys[i];
+        encrypted = encrypted ^ sub_keys[i];
     }
+
+    free(sub_keys);
     return encrypted ;
 }

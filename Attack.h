@@ -3,26 +3,52 @@
 #include "Encryption.h"
 #include "Decryption.h"
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
 
-typedef struct key_message_combination {
-    uint32_t key;
-    uint32_t message;
-} List;
+//Linked Combination structures and functions.
 
-typedef struct matching_keys{
+typedef struct CandidateKeys CandidateKeys;
+struct CandidateKeys{
     uint32_t k1;
     uint32_t k2;
-} match;
+    CandidateKeys* next;
+    CandidateKeys* previous;
+};
 
-List* swap(List* list, List trade, int pos_a, int pos_b);
+typedef struct KeysList{
+    CandidateKeys *first;
+    int size;
+}KeysList;
 
-int partitioning(List* list, int first, int last);
+KeysList* init();
 
-List* quickSort(List* list, int first, int last);
+void insert(KeysList* list,uint32_t k1, uint32_t k2); 
 
-List* fillList (List* list, uint32_t message);
+void remove_element(KeysList* list, CandidateKeys* element);
+
+void free_list(KeysList* list);
+
+/////////////////////////////////////////////////////////////////
+//Combination of key and result to be sorted and compared.
+
+typedef struct KeyMessageCombination {
+    uint32_t key;
+    uint32_t result;
+} Combination;
+
+void swap(Combination* list, Combination trade, int pos_a, int pos_b);
+
+int partitioning(Combination* list, int first, int last);
+
+void quickSort(Combination* list, int first, int last);
+
+void fillLists (Combination* enc_list, Combination* dec_list, uint32_t m1, uint32_t c1);
+
+void dichotomous_search (KeysList* KeysList, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end);
+
+/////////////////////////////////////////////////////////////////
+//Englobing functions to attack with 2 couple message and encrypted
 
 uint32_t attack(uint32_t m1, uint32_t m2, uint32_t c1, uint32_t c2);
-
-uint32_t findCorrectKey();
-
+uint32_t findCorrectKey(KeysList* candidates, uint32_t m2, uint32_t c2);
