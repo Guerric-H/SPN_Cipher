@@ -84,11 +84,8 @@ int userInterface(){
         int j = string_converter(message_checker,key_checker,&att.m2,&att.c2);
         if(!(i || j)){
             puts("Veuillez patienter pendant l'attaque ...\n");
-            clock_t start = clock();
             AttackResult result = attack(att, sub_keys);
-            clock_t end = clock();
-            double elapsed_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-            printf("Clé 1 : %x  |  Clé 2 : %x\nTemps pour l'attaque : %f\n",result.k1,result.k2,elapsed_time);
+            printf("Clé 1 : %x | Clé 2 : %x\n",result.k1, result.k2);
         }
         free(message_checker);
         free(key_checker);

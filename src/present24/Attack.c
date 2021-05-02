@@ -1,6 +1,7 @@
 #include "Encryption.h"
 #include "Decryption.h"
 #include "Attack.h"
+#include<time.h>
 #include<stdlib.h>
 #include<stdio.h>
 
@@ -142,24 +143,46 @@ void dichotomous_search(KeysList* keys, Combination* enc_list, Combination dec, 
 
 AttackResult attack(AttackInput input, uint32_t* sub_keys){
     
+    clock_t start = clock();
+    double elapsed_time = 0 ;
     Combination* enc_list = malloc(sizeof(Combination)*0x1000000);
     Combination* dec_list = malloc(sizeof(Combination)*0x1000000);
     KeysList* candidate = init();
 
+    clock_t fillListbegin = clock();
     fillLists(enc_list, dec_list, input,sub_keys);
+    clock_t fillListend = clock();
+    elapsed_time = ((double) (fillListend - fillListbegin)) / CLOCKS_PER_SEC;
+    printf("Temps pour chiffrer et déchiffrer avec toutes les clés possibles : %f\n",elapsed_time);
 
+    clock_t Quicksortbegin = clock();
     quickSort(enc_list, 0x0, 0xffffff);
     quickSort(dec_list, 0x0, 0xffffff);
-    
+    clock_t Quicksortend = clock();
+    elapsed_time = ((double) (Quicksortend - Quicksortbegin)) / CLOCKS_PER_SEC;
+    printf("Temps pour trier les listes : %f\n",elapsed_time);
+
+    clock_t dichotomousbegin = clock();
     for(int i = 0; i <= 0xffffff; i++)
         dichotomous_search(candidate, enc_list, dec_list[i], 0, 0xffffff);
-
-    AttackResult result = findCorrectKey(candidate, input,sub_keys);
+    clock_t dichotomoustend = clock();
+    elapsed_time = ((double) (dichotomoustend - dichotomousbegin)) / CLOCKS_PER_SEC;
+    printf("Temps pour la recherche dichotomique : %f\n",elapsed_time);
     
+    clock_t removebegin = clock();
+    AttackResult result = findCorrectKey(candidate, input,sub_keys);
+    clock_t removeend = clock();
+    elapsed_time = ((double) (removeend - removebegin)) / CLOCKS_PER_SEC;
+    printf("Temps pour éliminer les mauvaises clés: %f\n",elapsed_time);
+
     free_list(candidate);
     free(sub_keys);
     free(dec_list);
     free(enc_list);
+
+    clock_t end = clock();
+    elapsed_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Temps total: %f\n",elapsed_time);
 
     return result ;
 }
