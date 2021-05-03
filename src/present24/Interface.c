@@ -86,14 +86,14 @@ int userInterface(){
         
         puts("Message 1:");
         scanf(" %ms",&message_checker);  
-        puts("Clé 1:");
+        puts("Chiffré 1:");
         scanf(" %ms",&key_checker);
         int i = string_converter(message_checker,key_checker,&att.m1,&att.c1);
         
         puts("Veuillez choisir le message numéro 2, puis le chiffré numéro 2.\n");
         puts("Message 2:");
         scanf(" %ms",&message_checker);  
-        puts("Clé 2:");
+        puts("Chiffré 2:");
         scanf(" %ms",&key_checker);
         int j = string_converter(message_checker,key_checker,&att.m2,&att.c2);
         if(!(i || j)){
