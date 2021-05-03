@@ -19,10 +19,5 @@ int main (int argc, char **argv){
     while(continue_prog){
         continue_prog = userInterface();
     }
-    //attack(0x5530a0, 0xbf2eef, 0x156a97, 0x73f787);
-    //attack(0xae4def,0x832331,0xd218a6,0x9200d5);
-
-    //CandidateKeys result = attack(0xef333a, 0xfb432f, 0x250324, 0xa71982);
-    //printf("k1 = %x     k2 = %x\n",result.k1,result.k2);
     return 0;
 }
