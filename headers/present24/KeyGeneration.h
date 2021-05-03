@@ -2,4 +2,4 @@
 
 #include <stdint.h>
 
-uint32_t* subKeyGeneration(uint32_t masterKey);
+void subKeyGeneration(uint32_t masterKey, uint32_t* sub_keys);

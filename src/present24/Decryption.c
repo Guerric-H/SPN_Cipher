@@ -27,7 +27,7 @@ uint32_t revPermutation(uint32_t state) {
 
 uint32_t decryption (uint32_t encrypted, uint32_t key, uint32_t*  sub_keys){
     
-    sub_keys = subKeyGeneration(key);
+    subKeyGeneration(key, sub_keys);
 
     encrypted = encrypted ^ sub_keys[10];
     for (int i = 9; i >= 0 ; i--) {
@@ -35,7 +35,5 @@ uint32_t decryption (uint32_t encrypted, uint32_t key, uint32_t*  sub_keys){
         encrypted = revSubstitution(encrypted);
         encrypted = encrypted ^ sub_keys[i];
     }
-
-    free(sub_keys);
     return encrypted ;
 }

@@ -25,9 +25,9 @@ uint32_t permutation(uint32_t state) {
     return res;
 }
 
-uint32_t encryption(uint32_t message, uint32_t key, uint32_t* sub_keys) {
+uint32_t encryption(uint32_t message, uint32_t key, uint32_t* sub_keys){
    
-    sub_keys = subKeyGeneration(key);
+    subKeyGeneration(key, sub_keys);
     
     for (int i = 0; i < 10 ; i++) {
         message = message ^ sub_keys[i];
@@ -35,7 +35,5 @@ uint32_t encryption(uint32_t message, uint32_t key, uint32_t* sub_keys) {
         message = permutation(message);
     }
     message = message ^ sub_keys[10];
-    
-    free(sub_keys);
     return message;
 }

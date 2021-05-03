@@ -176,7 +176,6 @@ AttackResult attack(AttackInput input, uint32_t* sub_keys){
     printf("Temps pour éliminer les mauvaises clés: %f\n",elapsed_time);
 
     free_list(candidate);
-    free(sub_keys);
     free(dec_list);
     free(enc_list);
 
@@ -190,9 +189,9 @@ AttackResult attack(AttackInput input, uint32_t* sub_keys){
 AttackResult findCorrectKey(KeysList* candidates, AttackInput att,uint32_t* sub_keys) {
     
     CandidateKeys* current = candidates->first; 
-    CandidateKeys* tmp ;
-    AttackResult result ;
-    result.k1 = result.k2 = 0 ;
+    CandidateKeys* tmp;
+    AttackResult result;
+    result.k1 = result.k2 = 0;
         
     while (current) {
         tmp = current->next;

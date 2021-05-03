@@ -100,6 +100,5 @@ int userInterface(){
         puts("La valeur choisie ne correspond à aucune des options proposées.\n");
         break;
     }
-
  return continue_prog;
 }
