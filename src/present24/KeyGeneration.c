@@ -65,7 +65,7 @@ void subKeyGeneration(uint32_t masterKey, uint32_t* sub_keys) {
         tmp = (first_copy << 61) | (tmp << 45) | (first_copy >> 19);
         first_copy  = tmp;
         
-        tmp = sbox[tmp >> 60];                    
+        tmp = sbox[tmp >> 60] ;                    
         first_copy = (tmp << 60) | (first_copy << 4) >> 4;
 
         first_copy = (first_copy ^(i >> 1)) ;

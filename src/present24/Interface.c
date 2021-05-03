@@ -8,7 +8,11 @@
 #include "Decryption.h"
 #include "Attack.h"
 
-
+/*Take a string and convert it in hexadecimal. Handle 0x format
+    after conversion, ensure that values are not out of range (2^24).
+    return 1 if they are.
+    return 0 if everything is ok.
+*/
 int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *key)
 {
     *input = (uint32_t)strtoul(str_input,NULL,16);
@@ -21,6 +25,16 @@ int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *
  return 0;
 }
 
+/*
+    Display Users Choice at disposal, wait for its input.
+    Depending on the input, use appropriate case to ask for values, convert them and proceed to call the appropriate function.
+    Case 1  : Encryption, wait for 2 values ; message and key
+    Case 2  : Decryption, wait for 2 values ; encrypted and key
+    Case 3  : Attack, wait for 4 values ; m1, c1 and m2, c2
+    Case 4  : Quit the program
+    Default : Invalid input.
+    If not case 4, ask for an other operation right after.
+*/
 int userInterface(){
     
     int continue_prog = 1 ;
