@@ -119,7 +119,6 @@ void remove_element(KeysList* list, CandidateKeys* element){
         tmp->previous = element->previous;
     }
     list->size--;
-   // element->next = element->previous = NULL ;
     free(element);
 }
 
@@ -223,7 +222,7 @@ KeysList* attack(AttackInput input, uint32_t* sub_keys){
         dichotomous_verification(result, sub_keys, input, enc_list, dec_list[i], 0, 0xffffff);
     end = clock();
     elapsed_time = ((double) (end - begin)) / CLOCKS_PER_SEC;
-    printf("Temps pour la recherche dichotomique : %f\n",elapsed_time);
+    printf("Temps pour la recherche dichotomique et la vérification de clés : %f\n",elapsed_time);
     free(dec_list);
     free(enc_list);
 
@@ -233,38 +232,3 @@ KeysList* attack(AttackInput input, uint32_t* sub_keys){
 
     return result ;
 }
-
-/*Take the Keys List and test each combination with the second message and encrypted given.
-    If the result does not match c2, proceed to remove the key combination.
-    To check the match, use encryption on m2 and k1, take the result and encrypt it with k2.
-
-    Even though we return 1 key, if more exist, they can be found in the KeysList when the removal is finished. If we had a third message + encrypted, they would be used again with this function.
-    If our list has no member left, the size would be 0 and thus there's no existing combination.
-*/
-
-/*
-AttackResult findCorrectKey(KeysList* candidates, AttackInput att,uint32_t* sub_keys) {
-    
-    CandidateKeys* current = candidates->first; 
-    CandidateKeys* tmp;
-    AttackResult result;
-    result.k1 = result.k2 = 0;
-        
-    while (current) {
-        tmp = current->next;
-        if (att.c2 != encryption(encryption(att.m2, current->k1,sub_keys), current->k2,sub_keys))
-            remove_element(candidates, current);
-        else
-        {
-            result.k1 = current->k1;
-            result.k2 = current->k2;
-        }
-            
-        current = tmp;
-    }
-
-    if(!candidates->size)
-        puts("Aucune combinaison de clés trouvée. Les valeurs ci-dessous sont par défaut.\n");
-    return result;
-}
-*/
