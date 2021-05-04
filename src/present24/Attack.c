@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include<stdio.h>
 
+//(m1,c1) = (ef333a, 250324) (m2,c2) = (fb432f,a71982)
+
 /*Swap 2 elements in a list using a temporary*/
 void swap(Combination* list, int pos_a, int pos_b) {
     Combination trade = list[pos_a];
@@ -136,6 +138,12 @@ void free_list(KeysList* list){
     free(list);
 }
 
+void testing_key(KeysList* result, uint32_t k1, uint32_t k2, AttackInput input, uint32_t* sub_keys){
+    if (input.c2 == encryption(encryption(input.m2, k1,sub_keys), k2,sub_keys)){
+        insert(result, k1, k2);
+    }
+}
+
 /*Standard dichotomous search :
     if the two values are matching (we found a key combination), check for adjacent values (as the two list are sorted, we might look at other values that have use different keys but produce the same output)
     if the value of begin is equal or over end, we stop, as there was no match.
@@ -144,14 +152,14 @@ void free_list(KeysList* list){
     If the decryption value is more than our encryption, make the same research with begin = (begin + end / 2) + 1
 
 */ 
-void dichotomous_search(KeysList* keys, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end) {
+void dichotomous_verification(KeysList* keys,uint32_t* sub_keys, AttackInput input, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end) {
     int mid = (begin + end)/2;
     
-    if (enc_list[mid].result == dec.result) {    
+    if (enc_list[mid].result == dec.result) {   
         int i = 0;
         while ((mid - i) >= 0) {
             if (enc_list[mid - i].result == dec.result) {
-                insert (keys, enc_list[mid - i].key, dec.key);
+                testing_key(keys, enc_list[mid - i].key, dec.key, input, sub_keys);
                 i++;
             }
             else break;
@@ -159,7 +167,7 @@ void dichotomous_search(KeysList* keys, Combination* enc_list, Combination dec, 
         i = 1;
         while ((mid + i) <=  0xffffff) {
             if (enc_list[mid + i].result == dec.result) {
-                insert (keys, enc_list[mid + i].key, dec.key);
+                testing_key(keys, enc_list[mid + i].key, dec.key, input, sub_keys);
                 i++;
             }
             else break;
@@ -169,9 +177,9 @@ void dichotomous_search(KeysList* keys, Combination* enc_list, Combination dec, 
     if(begin >= end)
         return;
     if (enc_list[mid].result > dec.result)
-        dichotomous_search(keys, enc_list, dec, begin, mid - 1);
+        dichotomous_verification(keys, sub_keys, input, enc_list, dec, begin, mid - 1);
     if (enc_list[mid].result < dec.result)
-        dichotomous_search(keys, enc_list, dec, mid + 1, end);
+        dichotomous_verification(keys, sub_keys, input, enc_list, dec, mid + 1, end);
 }
 
 /*Global function for the attack
@@ -187,13 +195,13 @@ void dichotomous_search(KeysList* keys, Combination* enc_list, Combination dec, 
 Note : More than 1 combination may exist, however we would need a third (m3,c3) to verify which is the correct one. Thus, we will only return 1 key. 
 
 */
-AttackResult attack(AttackInput input, uint32_t* sub_keys){
+KeysList* attack(AttackInput input, uint32_t* sub_keys){
     
     clock_t start = clock();
     double elapsed_time = 0 ;
     Combination* enc_list = malloc(sizeof(Combination)*0x1000000);
     Combination* dec_list = malloc(sizeof(Combination)*0x1000000);
-    KeysList* candidate = init();
+    KeysList* result = init();
 
     clock_t begin = clock();
     fillLists(enc_list, dec_list, input,sub_keys);
@@ -210,18 +218,10 @@ AttackResult attack(AttackInput input, uint32_t* sub_keys){
 
     begin = clock();
     for(int i = 0; i <= 0xffffff; i++)
-        dichotomous_search(candidate, enc_list, dec_list[i], 0, 0xffffff);
+        dichotomous_verification(result, sub_keys, input, enc_list, dec_list[i], 0, 0xffffff);
     end = clock();
     elapsed_time = ((double) (end - begin)) / CLOCKS_PER_SEC;
     printf("Temps pour la recherche dichotomique : %f\n",elapsed_time);
-    
-    begin = clock();
-    AttackResult result = findCorrectKey(candidate, input,sub_keys);
-    end = clock();
-    elapsed_time = ((double) (end - begin)) / CLOCKS_PER_SEC;
-    printf("Temps pour éliminer les mauvaises clés: %f\n",elapsed_time);
-
-    free_list(candidate);
     free(dec_list);
     free(enc_list);
 
@@ -239,6 +239,8 @@ AttackResult attack(AttackInput input, uint32_t* sub_keys){
     Even though we return 1 key, if more exist, they can be found in the KeysList when the removal is finished. If we had a third message + encrypted, they would be used again with this function.
     If our list has no member left, the size would be 0 and thus there's no existing combination.
 */
+
+/*
 AttackResult findCorrectKey(KeysList* candidates, AttackInput att,uint32_t* sub_keys) {
     
     CandidateKeys* current = candidates->first; 
@@ -263,3 +265,4 @@ AttackResult findCorrectKey(KeysList* candidates, AttackInput att,uint32_t* sub_
         puts("Aucune combinaison de clés trouvée. Les valeurs ci-dessous sont par défaut.\n");
     return result;
 }
+*/

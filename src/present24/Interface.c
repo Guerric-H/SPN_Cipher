@@ -25,6 +25,17 @@ int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *
  return 0;
 }
 
+void display_result(KeysList* result){
+    CandidateKeys* current = result->first; 
+
+    while (current) {
+    printf("Clé 1 : %x\t| Clé 2 : %x\n",current->k1,current->k2);
+    current = current->next;
+    }
+    
+    //printf("%d\n",result->size);
+}
+
 /*
     Display Users Choice at disposal, wait for its input.
     Depending on the input, use appropriate case to ask for values, convert them and proceed to call the appropriate function.
@@ -98,8 +109,9 @@ int userInterface(){
         int j = string_converter(message_checker,key_checker,&att.m2,&att.c2);
         if(!(i || j)){
             puts("Veuillez patienter pendant l'attaque ...\n");
-            AttackResult result = attack(att, sub_keys);
-            printf("Clé 1 : %x | Clé 2 : %x\n",result.k1, result.k2);
+            KeysList* result = attack(att, sub_keys);
+            display_result(result);
+            free(result);
         }
         free(message_checker);
         free(key_checker);

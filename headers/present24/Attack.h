@@ -58,11 +58,13 @@ void quickSort(Combination* list, int first, int last);
 //Fill 2 list with pre-defined size, meant to be used with dynamic array of size 2^24 (NON PORTABLE)
 void fillLists (Combination* enc_list, Combination* dec_list, AttackInput input, uint32_t* sub_keys);
 
-//Dichotomous search global function
-void dichotomous_search (KeysList* KeysList, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end);
 
+void testing_key(KeysList* result, uint32_t k1, uint32_t k2, AttackInput input, uint32_t* sub_keys);
+
+//Dichotomous search global function
+void dichotomous_verification (KeysList* KeysList,uint32_t* sub_keys, AttackInput input, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end);
 
 //Englobing function to attack with 2 couple message and encrypted
-AttackResult attack(AttackInput, uint32_t* sub_keys);
+KeysList* attack(AttackInput, uint32_t* sub_keys);
 //Remove every key combination that are not valid
 AttackResult findCorrectKey(KeysList* candidates, AttackInput input, uint32_t* sub_keys);
