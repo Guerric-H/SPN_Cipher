@@ -137,7 +137,9 @@ void free_list(KeysList* list){
     }
     free(list);
 }
-
+/* Take 2 keys, use them to encrypt m2, and check if it is equal to c2
+    if they are potential key results, insert it on the List of results. 
+*/
 void testing_key(KeysList* result, uint32_t k1, uint32_t k2, AttackInput input, uint32_t* sub_keys){
     if (input.c2 == encryption(encryption(input.m2, k1,sub_keys), k2,sub_keys)){
         insert(result, k1, k2);

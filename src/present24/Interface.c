@@ -25,15 +25,18 @@ int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *
  return 0;
 }
 
+/* For each result found, write them on the terminal, if no keys were found, put a pre defined message.
+*/
 void display_result(KeysList* result){
     CandidateKeys* current = result->first; 
-
-    while (current) {
-    printf("Clé 1 : %x\t| Clé 2 : %x\n",current->k1,current->k2);
-    current = current->next;
+    if (!result->size){
+        puts("Aucune combinaison de clés ne correspond à ces messages et chiffrés.\n");
+        return;
     }
-    
-    //printf("%d\n",result->size);
+    while (current) {
+        printf("Clé 1 : %x\t| Clé 2 : %x\n",current->k1,current->k2);
+        current = current->next;
+    }
 }
 
 /*
