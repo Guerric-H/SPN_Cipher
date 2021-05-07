@@ -17,8 +17,7 @@ int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *
     return 0;
 }
 
-/* For each result found, write them on the terminal, if no keys were found, put a pre defined message.
-*/
+// For each result found, write them on the terminal, if no keys were found, put a pre defined message.
 void display_result(KeysList* result){
     CandidateKeys* current = result->first; 
     if (!result->size){

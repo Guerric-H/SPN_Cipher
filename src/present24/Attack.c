@@ -2,7 +2,7 @@
 
 //(m1,c1) = (ef333a, 250324) (m2,c2) = (fb432f,a71982)
 
-/*Swap 2 elements in a list using a temporary*/
+//Swap 2 elements in a list using a temporary*/
 void swap(Combination* list, int pos_a, int pos_b) {
     Combination trade = list[pos_a];
     list[pos_a] = list[pos_b];
