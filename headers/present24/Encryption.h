@@ -1,5 +1,5 @@
 #pragma once
-#include <stdint.h>
+#include "KeyGeneration.h"
 
 //Structure that contains the data given by the user for an encryption.
 typedef struct Encryption{
@@ -9,6 +9,7 @@ typedef struct Encryption{
 
 //Putting our message (encrypted a number of time or not) in a Sbox and getting back the modified message
 uint32_t substitution(uint32_t state);
+
 //Putting our message (encrypted a number of time or not) and replacing each bit by the content of the permutationTable.
 //Return the modified message
 uint32_t permutation(uint32_t state);

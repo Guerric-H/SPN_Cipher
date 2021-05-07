@@ -1,6 +1,5 @@
 #pragma once
-#include <stdint.h>
-
+#include "KeyGeneration.h"
 
 typedef struct Decryption{
     uint32_t encrypted;

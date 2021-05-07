@@ -1,6 +1,4 @@
 #include "Decryption.h"
-#include "KeyGeneration.h"
-#include<stdlib.h>
 
 /*The reverse substitution use a reverse Sbox and operate the same as the classic Substitution.
 

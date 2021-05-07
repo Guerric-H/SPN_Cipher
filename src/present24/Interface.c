@@ -1,12 +1,4 @@
-//#include "Interface.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <time.h>
-
-#include "Encryption.h"
-#include "Decryption.h"
-#include "Attack.h"
+#include "Interface.h"
 
 /*Take a string and convert it in hexadecimal. Handle 0x format
     after conversion, ensure that values are not out of range (2^24).
@@ -22,7 +14,7 @@ int string_converter(char *str_input, char *str_key, uint32_t *input, uint32_t *
         puts("Les valeurs choisies sont trop grandes.\n");
         return 1;
     }
- return 0;
+    return 0;
 }
 
 /* For each result found, write them on the terminal, if no keys were found, put a pre defined message.
@@ -34,7 +26,7 @@ void display_result(KeysList* result){
         return;
     }
     while (current) {
-        printf("Clé 1 : %x\t| Clé 2 : %x\n",current->k1,current->k2);
+        printf("Clé 1 : %06x\t| Clé 2 : %06x\n",current->k1,current->k2);
         current = current->next;
     }
 }
@@ -60,7 +52,7 @@ int userInterface(){
     AttackInput att ;
     uint32_t* sub_keys = malloc(sizeof(uint32_t)*11);
 
-    puts ("\nChiffrer\t: 1\nDéchiffrer\t: 2\nAttaquer\t: 3\nArrêter\t\t: q\n");
+    puts ("\nChiffrer\t: 1\nDéchiffrer\t: 2\nAttaquer\t: 3\nQuitter\t\t: q\n");
     scanf(" %c",&choice);
 
     switch (choice)

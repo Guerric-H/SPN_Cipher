@@ -1,9 +1,4 @@
-#include "Encryption.h"
-#include "Decryption.h"
 #include "Attack.h"
-#include<time.h>
-#include<stdlib.h>
-#include<stdio.h>
 
 //(m1,c1) = (ef333a, 250324) (m2,c2) = (fb432f,a71982)
 
@@ -57,8 +52,8 @@ void fillLists (Combination* enc_list, Combination* dec_list, AttackInput input,
 }
 
 /*Function used to create a simple linked list
-    first is set to NULL and will be given as a next when inserting, it will be used as the end of the list
-    size is 0, and will increase or decrease depending on removal or insertions.
+    first is set to NULL and will be given as a next when inserting, it will be used as the end of the list.
+    size is 0, and will increase or decrease depending on removals or insertions.
 */
 KeysList* init(){
     
@@ -152,16 +147,18 @@ void testing_key(KeysList* result, uint32_t k1, uint32_t k2, AttackInput input, 
     If the decryption value is less than our encryption, make the same research with end = (begin + end / 2) - 1
     If the decryption value is more than our encryption, make the same research with begin = (begin + end / 2) + 1
 
+    Return the number of corresponding candidate keys combinations for one element of the decrypted list.
 */ 
-void dichotomous_verification(KeysList* keys,uint32_t* sub_keys, AttackInput input, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end) {
+size_t dichotomous_verification(KeysList* keys,uint32_t* sub_keys, AttackInput input, Combination* enc_list, Combination dec, uint32_t begin, uint32_t end) {
     int mid = (begin + end)/2;
-    
+    size_t match_number = 0;
+
     if (enc_list[mid].result == dec.result) {   
         int i = 0;
         while ((mid - i) >= 0) {
             if (enc_list[mid - i].result == dec.result) {
                 testing_key(keys, enc_list[mid - i].key, dec.key, input, sub_keys);
-                i++;
+                i++; match_number++;
             }
             else break;
         }
@@ -169,18 +166,18 @@ void dichotomous_verification(KeysList* keys,uint32_t* sub_keys, AttackInput inp
         while ((mid + i) <=  0xffffff) {
             if (enc_list[mid + i].result == dec.result) {
                 testing_key(keys, enc_list[mid + i].key, dec.key, input, sub_keys);
-                i++;
+                i++; match_number++;
             }
             else break;
         }
-        return;
+        return match_number;
     }  
-    if(begin >= end)
-        return;
+    if (begin >= end)
+        return 0;
     if (enc_list[mid].result > dec.result)
-        dichotomous_verification(keys, sub_keys, input, enc_list, dec, begin, mid - 1);
-    if (enc_list[mid].result < dec.result)
-        dichotomous_verification(keys, sub_keys, input, enc_list, dec, mid + 1, end);
+        return dichotomous_verification(keys, sub_keys, input, enc_list, dec, begin, mid - 1);
+    else
+        return dichotomous_verification(keys, sub_keys, input, enc_list, dec, mid + 1, end);
 }
 
 /*Global function for the attack
@@ -198,6 +195,7 @@ Note : More than 1 combination may exist, however we would need a third (m3,c3) 
 */
 KeysList* attack(AttackInput input, uint32_t* sub_keys){
     
+    size_t match_number = 0;
     clock_t start = clock();
     double elapsed_time = 0 ;
     Combination* enc_list = malloc(sizeof(Combination)*0x1000000);
@@ -219,7 +217,7 @@ KeysList* attack(AttackInput input, uint32_t* sub_keys){
 
     begin = clock();
     for(int i = 0; i <= 0xffffff; i++)
-        dichotomous_verification(result, sub_keys, input, enc_list, dec_list[i], 0, 0xffffff);
+        match_number += dichotomous_verification(result, sub_keys, input, enc_list, dec_list[i], 0, 0xffffff);
     end = clock();
     elapsed_time = ((double) (end - begin)) / CLOCKS_PER_SEC;
     printf("Temps pour la recherche dichotomique et la vérification de clés : %f\n",elapsed_time);
@@ -229,6 +227,7 @@ KeysList* attack(AttackInput input, uint32_t* sub_keys){
     end = clock();
     elapsed_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Temps total: %f\n",elapsed_time);
+    printf("Nombre de combinaisons de clés candidates : %ld\n", match_number);
 
     return result ;
 }
