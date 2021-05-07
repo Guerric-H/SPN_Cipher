@@ -2,10 +2,11 @@
 #include "KeyGeneration.h"
 
 //Structure that contains the data given by the user for a decryption.
-typedef struct Decryption{
+typedef struct Decryption
+{
     uint32_t encrypted;
     uint32_t key;
-}Decrypt;
+} Decrypt;
 
 //Putting our message (decrypted a number of time or not) in a reverse Sbox and getting back the modified message
 uint32_t revSubstitution(uint32_t state);
@@ -19,4 +20,4 @@ uint32_t revPermutation(uint32_t state);
 XOR and apply functions above 10 times
 More details in Decryption.c
 */
-uint32_t decryption(uint32_t message, uint32_t key, uint32_t* sub_keys);
+uint32_t decryption(uint32_t message, uint32_t key, uint32_t *sub_keys);

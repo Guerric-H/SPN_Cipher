@@ -46,23 +46,25 @@ Last part is using a XOR between the 4 least significant bits or (first_copy and
 
     The idea is the same for second_copy. We will shift left i 15 times to put the least significant bit in front of second_copy's most significant one and then XOR. 
     second_copy other bits won't be modified by the XOR, as other every other bits than the one we look for on i are at 0. 
-*/ 
-void subKeyGeneration(uint32_t master_key, uint32_t* sub_keys) {
+*/
+void subKeyGeneration(uint32_t master_key, uint32_t *sub_keys)
+{
 
     uint16_t static sbox[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
-    uint64_t first_copy = master_key, tmp; 
+    uint64_t first_copy = master_key, tmp;
     uint16_t second_copy = 0;
 
     first_copy = (first_copy << 40);
 
-    for (uint32_t i = 1; i <= 11 ; i++) {
-        sub_keys[i-1] = first_copy & 0xffffff;
+    for (uint32_t i = 1; i <= 11; i++)
+    {
+        sub_keys[i - 1] = first_copy & 0xffffff;
         tmp = second_copy;
 
-        second_copy = first_copy << 45 >> 48;   // corresponds at ">> 3" in a more optimized way as observed during compilation.
+        second_copy = first_copy << 45 >> 48; // corresponds at ">> 3" in a more optimized way as observed during compilation.
         first_copy = (first_copy << 61) | (tmp << 45) | (first_copy >> 19);
-        
-        tmp = sbox[first_copy >> 60];                    
+
+        tmp = sbox[first_copy >> 60];
         first_copy = (tmp << 60) | (first_copy << 4) >> 4;
 
         first_copy = (first_copy ^ (i >> 1));
