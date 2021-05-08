@@ -5,36 +5,32 @@
 #include "Encryption.h"
 #include "Decryption.h"
 
-//Struct used to return valid keys.
-typedef struct KResult
-{
-    uint32_t k1;
-    uint32_t k2;
-} AttackResult;
-
 //Struct used to give information for attack.
-typedef struct MKAttack
-{
+typedef struct MKAttack {
     uint32_t m1;
     uint32_t c1;
     uint32_t m2;
     uint32_t c2;
 } AttackInput;
 
+//Combination of key and result to be sorted and compared.
+typedef struct KeyMessageCombination {
+    uint32_t key;
+    uint32_t result;
+} Combination;
+
 //Struct element of the List below, pointer to next and previous ; contains k1, k2
-typedef struct CandidateKeys CandidateKeys;
-struct CandidateKeys
-{
+typedef struct SecretKeys SecretKeys;
+struct SecretKeys {
     uint32_t k1;
     uint32_t k2;
-    CandidateKeys *next;
-    CandidateKeys *previous;
+    SecretKeys *next;
+    SecretKeys *previous;
 };
 
 //Struct Linked List, pointer to first element. Contain the size of the Linked List
-typedef struct KList
-{
-    CandidateKeys *first;
+typedef struct KList {
+    SecretKeys *first;
     int size;
 } KeysList;
 
@@ -44,18 +40,8 @@ KeysList *init();
 //Insert a new element to the list
 void insert(KeysList *list, uint32_t k1, uint32_t k2);
 
-//Remove a specific element of the list
-void remove_element(KeysList *list, CandidateKeys *element);
-
 //Free the Linked List
 void free_list(KeysList *list);
-
-//Combination of key and result to be sorted and compared.
-typedef struct KeyMessageCombination
-{
-    uint32_t key;
-    uint32_t result;
-} Combination;
 
 void swap(Combination *list, int pos_a, int pos_b);
 
@@ -73,6 +59,3 @@ size_t dichotomous_verification(KeysList *KeysList, uint32_t *sub_keys, AttackIn
 
 //Englobing function to attack with 2 couple message and encrypted
 KeysList *attack(AttackInput, uint32_t *sub_keys);
-
-//Remove every key combination that are not valid
-AttackResult findCorrectKey(KeysList *candidates, AttackInput input, uint32_t *sub_keys);

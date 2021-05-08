@@ -49,13 +49,11 @@ Last part is using a XOR between the 4 least significant bits or (first_copy and
 */
 void subKeyGeneration(uint32_t master_key, uint32_t *sub_keys)
 {
-
     uint16_t static sbox[16] = {12, 5, 6, 11, 9, 0, 10, 13, 3, 14, 15, 8, 4, 7, 1, 2};
     uint64_t first_copy = master_key, tmp;
     uint16_t second_copy = 0;
 
     first_copy = (first_copy << 40);
-
     for (uint32_t i = 1; i <= 11; i++)
     {
         sub_keys[i - 1] = first_copy & 0xffffff;

@@ -26,6 +26,7 @@ int partitioning(Combination *list, int first, int last)
             pos++;
         }
     }
+
     swap(list, pos, last);
     return pos;
 }
@@ -37,7 +38,6 @@ int partitioning(Combination *list, int first, int last)
 */
 void quickSort(Combination *list, int first, int last)
 {
-
     if (first < last)
     {
         int pivot = partitioning(list, first, last);
@@ -65,7 +65,6 @@ void fillLists(Combination *enc_list, Combination *dec_list, AttackInput input, 
 */
 KeysList *init()
 {
-
     KeysList *list = malloc(sizeof(KeysList));
     list->first = NULL;
     list->size = 0;
@@ -79,8 +78,7 @@ KeysList *init()
 */
 void insert(KeysList *list, uint32_t key1, uint32_t key2)
 {
-
-    CandidateKeys *new_element = malloc(sizeof(CandidateKeys));
+    SecretKeys *new_element = malloc(sizeof(SecretKeys));
 
     new_element->next = list->first;
     new_element->previous = NULL;
@@ -89,46 +87,12 @@ void insert(KeysList *list, uint32_t key1, uint32_t key2)
 
     if (list->first)
     {
-        CandidateKeys *tmp = list->first;
+        SecretKeys *tmp = list->first;
         tmp->previous = new_element;
     }
+
     list->first = new_element;
     list->size++;
-}
-
-/*Element removal using the pointer to the element
-    if NULL, do nothing.
-    if element is first, remove it but take care of keeping a valid pointer to first, by setting it to the 2nd.
-    if a previous element exist, set it's new next to the actual element->next.
-    if a following element exist, set it's new previous to the actual element->previous.
-    decrease the size by 1.
-    free the element we removed.
-
-*/
-void remove_element(KeysList *list, CandidateKeys *element)
-{
-
-    if (!element)
-        return;
-
-    if (element == list->first)
-    {
-        list->first = element->next;
-    }
-
-    if (element->previous)
-    {
-        CandidateKeys *tmp = element->previous;
-        tmp->next = element->next;
-    }
-
-    if (element->next)
-    {
-        CandidateKeys *tmp = element->next;
-        tmp->previous = element->previous;
-    }
-    list->size--;
-    free(element);
 }
 
 /*Free the whole list, by using free until there is no element remaining.
@@ -136,8 +100,8 @@ void remove_element(KeysList *list, CandidateKeys *element)
 */
 void free_list(KeysList *list)
 {
-    CandidateKeys *current = list->first;
-    CandidateKeys *next;
+    SecretKeys *current = list->first;
+    SecretKeys *next;
 
     while (current)
     {
@@ -145,17 +109,17 @@ void free_list(KeysList *list)
         free(current);
         current = next;
     }
+
     free(list);
 }
+
 /* Take 2 keys, use them to encrypt m2, and check if it is equal to c2
     if they are potential key results, insert it on the List of results. 
 */
 void testing_key(KeysList *result, uint32_t k1, uint32_t k2, AttackInput input, uint32_t *sub_keys)
 {
     if (input.c2 == encryption(encryption(input.m2, k1, sub_keys), k2, sub_keys))
-    {
         insert(result, k1, k2);
-    }
 }
 
 /*Standard dichotomous search :
@@ -180,28 +144,30 @@ size_t dichotomous_verification(KeysList *keys, uint32_t *sub_keys, AttackInput 
             if (enc_list[mid - i].result == dec.result)
             {
                 testing_key(keys, enc_list[mid - i].key, dec.key, input, sub_keys);
-                i++;
-                match_number++;
+                i++; match_number++;
             }
             else
                 break;
         }
+
         i = 1;
         while ((mid + i) <= 0xffffff)
         {
             if (enc_list[mid + i].result == dec.result)
             {
                 testing_key(keys, enc_list[mid + i].key, dec.key, input, sub_keys);
-                i++;
-                match_number++;
+                i++; match_number++;
             }
             else
                 break;
         }
+
         return match_number;
     }
+
     if (begin >= end)
         return 0;
+
     if (enc_list[mid].result > dec.result)
         return dichotomous_verification(keys, sub_keys, input, enc_list, dec, begin, mid - 1);
     else
@@ -219,11 +185,9 @@ size_t dichotomous_verification(KeysList *keys, uint32_t *sub_keys, AttackInput 
     6) Returning the valid key combination.
 
 Note : More than 1 combination may exist, however we would need a third (m3,c3) to verify which is the correct one. Thus, we will only return 1 key. 
-
 */
-KeysList *attack(AttackInput input, uint32_t *sub_keys)
+KeysList* attack(AttackInput input, uint32_t *sub_keys)
 {
-
     size_t match_number = 0;
     clock_t start = clock();
     double elapsed_time = 0;
@@ -250,9 +214,9 @@ KeysList *attack(AttackInput input, uint32_t *sub_keys)
     end = clock();
     elapsed_time = ((double)(end - begin)) / CLOCKS_PER_SEC;
     printf("Temps pour la recherche dichotomique et la vérification de clés : %f\n", elapsed_time);
+
     free(dec_list);
     free(enc_list);
-
     end = clock();
     elapsed_time = ((double)(end - start)) / CLOCKS_PER_SEC;
     printf("Temps total: %f\n", elapsed_time);
